@@ -13,6 +13,8 @@ drive.mount('/content/drive')
 
 import pandas as pd
 
+dt = pd.DataFrame()
+
 df = pd.read_csv("/content/drive/MyDrive/data_science_project/Trips_full_Data.csv")
 
 # to load the dataset we do
@@ -34,4 +36,58 @@ distance_cols = [
 ]
 
 weekly_distance = df.groupby('Week')[distance_cols].sum()
+
+
+
+import matplotlib.pyplot as plt
+
+#now we determine its size and we label it
+
+plt.figure(figsize=(14,8))
+plt.plot(weekly_home.index, weekly_home.values, label='Population Staying at Home', linewidth=2)
+plt.plot(weekly_not_home.index, weekly_not_home.values, label='Population Not Staying at Home', linewidth=2)
+#now we name our axes
+plt.title("Weekly Stay-at-Home vs Not-Staying-Home Population")
+plt.xlabel("Week")
+plt.ylabel("Population")
+plt.legend()
+plt.grid(True)
+#and then we output the graph and save it
+plt.tight_layout()
+plt.savefig("weekly_stay_home.png", dpi=300)
+plt.show()
+
+
+
+plt.figure(figsize=(14,7))
+
+plt.stackplot(
+    weekly_distance.index,
+    [weekly_distance[col] for col in distance_cols],
+    labels=distance_cols
+)
+#now we label the axes for the 2nd graph
+plt.title("Weekly Distribution of Trips by Distance Band")
+plt.xlabel("Week")
+plt.ylabel("Number of Trips")
+plt.legend(loc='upper left', bbox_to_anchor=(1,1))
+plt.tight_layout()
+#to save our file
+plt.savefig("weekly_distance_bands.png", dpi=300)
+plt.show()
+
+
+
+distance_totals = df[distance_cols].sum()
+#our graph size
+plt.figure(figsize=(13,7))
+distance_totals.plot(kind='bar', color='steelblue')
+#again we label the axes of our graph
+plt.title("Total Trips by Distance Band")
+plt.xlabel("Distance Band")
+plt.ylabel("Total Number of Trips")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig("totaltrips_distance_bands.png", dpi=300)
+plt.show()
 
